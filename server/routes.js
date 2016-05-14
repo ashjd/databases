@@ -8,7 +8,10 @@ router.post('/messages', controller.messages.post);
 
 router.get('/users', controller.users.get);
 
-router.post('/users', controller.users.post);
+router.post('/users', function(req, res) {
+  console.log('router for user post');
+  controller.users.post(req, res);
+});
 
 
 module.exports = router;

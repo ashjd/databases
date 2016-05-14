@@ -28,7 +28,7 @@ module.exports = {
       });
     },
     post: function (str, callback) {
-      var queryString = 'INSERT INTO MESSAGES (message, username, roomname) VALUES ("undefined", ' + str + ', "undefined");';
+      var queryString = 'INSERT INTO MESSAGES (message, username, roomname) VALUES ("In mercy\'s name, three days is all I need.", ' + str + ', "undefined");';
       exports.connectToDb(queryString, function(data) {
         callback(data);
       });
@@ -38,16 +38,15 @@ module.exports = {
 };
 
 exports.connectToDb = function(queryString, callback) {
-  db.query(queryString, function(err, rows, fields) {
+  db.query(queryString, function(err, results) {
     if (err) {
       throw err;
     } else {
-      var data = '';
-      for (var i in rows) {
-        console.log(rows[i]);
-        data += rows[i] + '\n';
-      }
-      callback(data);
+      // var data = '';
+      // for (var i in rows) {
+      //   data += rows[i] + '\n';
+      // }
+      callback(results);
     }
   });
 };

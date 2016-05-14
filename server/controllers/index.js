@@ -2,91 +2,45 @@ var models = require('../models');
 var db = require('../db');
 
 
-exports.headers = {
-  'access-control-allow-origin': '*',
-  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'access-control-allow-headers': 'content-type, accept',
-  'access-control-max-age': 10, // Seconds.
-  'Content-Type': 'text/html'
-};
-
 module.exports = {
   messages: {
     get: function (req, res) {
-
       models.messages.get(function(data) {
-        exports.sendResponse(res, data, 200);
+        res.json(data);
+        console.log('get data in messages - ', data);
+        res.end(data);
       });
-
     }, // a function which handles a get request for all messages 
     post: function (req, res) {
-
-      exports.collectData(req, function(err, data) {
-        if (err) {
-          throw err;
-        } else {
-          console.log ('data is = ', data);
-          models.messages.post( '"hello there", "aj", "lobby"', function(data) {
-            exports.sendResponse(res, data, 201);
-          });
-        }
+      console.log('Serving request type ' + req.method + ' for url ' + req.url);
+      var message = '\"' + req.body.message.toString() + '\"';
+      var username = '\"' + req.body.username.toString() + '\"';
+      var roomname = '\"' + req.body.roomname.toString() + '\"';
+      var input = message + ', ' + username + ', ' + roomname;
+      console.log('input', input);
+      models.messages.post(input, function(data) {
+        console.log('done');
+        res.end('done');
       });
 
     } // a function which handles posting a message to the database
   },
 
   users: {
-    // Ditto as above
     get: function (req, res) {
-
       models.users.get(function(data) {
-        exports.sendResponse(res, data, 200);
+        console.log('data - ', data);
+        res.end(data);
       });
-
     },
     post: function (req, res) {
-      exports.collectData(req, function(err, data) {
-        if (err) {
-          throw err;
-        } else {
-          console.log('data:' + data);
-          models.users.post('"ash"', function(data) {
-            exports.sendResponse(res, data, 201);
-          });
-        }
+      console.log('Serving request type ' + req.method + ' for url ' + req.url);
+      models.users.post('\"' + req.body.username.toString() + '\"', function(data) {
+        console.log('done');
+        res.end('done');
       });
     }
   }
 };
 
-exports.collectData = function(request, callback) {
-  var data = '';
-  request.on('data', function(chunk) {
-    data += chunk;
-  });
-  request.on('end', function() {
-    callback(data);
-  });
-};
-
-exports.sendResponse = function(response, obj, status) {
-  status = status || 200;
-  response.writeHead(status, exports.headers);
-  response.end(obj);
-};
-
-exports.connectToDb = function(queryString, callback) {
-  db.query(queryString, function(err, rows, fields) {
-    if (err) {
-      throw err;
-    } else {
-      var data = '';
-      for (var i in rows) {
-        console.log(rows[i]);
-        data += rows[i] + '\n';
-      }
-      callback(data);
-    }
-  });
-};
 
