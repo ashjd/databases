@@ -1,9 +1,8 @@
-
 var app = {
 
   //TODO: The current 'toggleFriend' function just toggles the class 'friend'
   //to all messages sent by the user
-  server: 'https://1207.0.0.1:3000/classes/messages',
+  server: 'http://127.0.0.1:3000/classes/messages',
   username: 'anonymous',
   roomname: 'lobby',
   lastMessageId: 0,
@@ -26,7 +25,7 @@ var app = {
 
     // Fetch previous messages
     app.startSpinner();
-    app.fetch(true);
+    app.fetch(false);
 
     // Poll for new messages
     setInterval(app.fetch, 3000);
@@ -45,7 +44,7 @@ var app = {
       contentType: 'application/json',
       success: function (data) {
         // Trigger a fetch to update the messages, pass true to animate
-        app.fetch(true);
+        app.fetch();
       },
       error: function (data) {
         console.error('chatterbox: Failed to send message', data);
@@ -58,8 +57,10 @@ var app = {
       url: app.server,
       type: 'GET',
       contentType: 'application/json',
-      data: { order: '-createdAt'},
+    //  data: { order: '-createdAt'},
       success: function(data) {
+
+        console.log(data);
         // Don't bother if we have nothing to work with
         if (!data.results || !data.results.length) { return; }
 
@@ -233,4 +234,3 @@ var app = {
     $('form input[type=submit]').attr('disabled', null);
   }
 };
-
