@@ -1,6 +1,5 @@
 var models = require('../models');
-
-//var db = require('./db');
+var db = require('../db');
 
 
 exports.headers = {
@@ -22,12 +21,12 @@ module.exports = {
     }, // a function which handles a get request for all messages 
     post: function (req, res) {
 
-      exports.collectData (req, function(data) {
+      exports.collectData(req, function(err, data) {
         if (err) {
           throw err;
         } else {
-          console.log('data: ----' + data);
-          exports.connectToDb('INSERT INTO MESSAGES (message, username, roomname) VALUES ("hi123", "aj123", "lobby")', function(data) {
+          console.log ('data is = ', data);
+          models.messages.post( '"hello there", "aj", "lobby"', function(data) {
             exports.sendResponse(res, data, 201);
           });
         }
@@ -46,12 +45,12 @@ module.exports = {
 
     },
     post: function (req, res) {
-      exports.collectData (req, function(data) {
+      exports.collectData(req, function(err, data) {
         if (err) {
           throw err;
         } else {
           console.log('data:' + data);
-          models.messages.post(function(data) {
+          models.users.post('"ash"', function(data) {
             exports.sendResponse(res, data, 201);
           });
         }

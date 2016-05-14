@@ -3,13 +3,14 @@ var db = require('../db');
 module.exports = {
   messages: {
     get: function (callback) {
-      var queryString = 'SELECT * IN MESSAGES';
+      var queryString = 'SELECT * FROM MESSAGES';
+      
       exports.connectToDb(queryString, function(data) {
         callback(data);
       });
     }, // a function which produces all the messages
 
-    post: function (str) {
+    post: function (str, callback) {
       var queryString = 'INSERT INTO MESSAGES (message, username, roomname) VALUES (' + str + ');';
       exports.connectToDb(queryString, function(data) {
         callback(data);
@@ -20,14 +21,14 @@ module.exports = {
 
   users: {
 
-    get: function () {
-      var queryString = 'SELECT users IN MESSAGES';
+    get: function (callback) {
+      var queryString = 'SELECT username FROM MESSAGES';
       exports.connectToDb(queryString, function(data) {
         callback(data);
       });
     },
-    post: function (str) {
-      var queryString = 'INSERT INTO MESSAGES (username) VALUES (' + str + ');';
+    post: function (str, callback) {
+      var queryString = 'INSERT INTO MESSAGES (message, username, roomname) VALUES ("undefined", ' + str + ', "undefined");';
       exports.connectToDb(queryString, function(data) {
         callback(data);
       });
